@@ -1,26 +1,47 @@
 <script lang="ts">
     import Header from './Header.svelte'
-    let name = $state('Brody');
-    let status: 'OPEN' | 'CLOSED' = $state('OPEN');
-    let full_name = $derived(name + " " + 'Kwiatkowski')
 
-    // function toggle() {
-    //     status = status == 'OPEN' ? 'CLOSED' : 'OPEN'
-    // }
-    function onclick() {
-        status = status == 'OPEN' ? 'CLOSED' : 'OPEN';
-    }
+    let formState = $state({
+        name: '',
+        birthday: '',
+        step: 0,
+        error: ''
+    });
+
 </script>
 
-<Header {name} />
+<Header name={formState.name} />
 
-<h3>{full_name}</h3>
+<main>
+    <p>Step: {formState.step + 1}</p>
 
-<input type="text" bind:value={name} />
+    {@render formStep({
+        question: "What's your name",
+        id: 'name',
+        type: 'text'
+    })}
+</main>
 
-<p>The store is now {status}</p>
+{#snippet formStep({question, id, type} : {
+    type: string; id: string; question: string;
+})}
+    <article>
+        <div>
+            <label for="{id}">{question}</label>
+            <input {type} {id} bind:value={formState[id]}>
+        </div>
+    </article>
+{/snippet}
 
-<!-- <button {onclick}>Toggle Status</button> -->
-<button onclick={() => {
-    status = status == 'OPEN' ? 'CLOSED' : 'OPEN';
-}}>Toggle Status</button>
+<style>
+    :global(body) {
+        background-color: #222;
+        color: #eee;
+    }
+    :global(div) {
+        background-color: slategray;
+    }
+    .error {
+        color: red;
+    }
+</style>
