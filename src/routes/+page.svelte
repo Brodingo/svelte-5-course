@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fly } from 'svelte/transition';
     import Header from './Header.svelte'
 
     let formState = $state({
@@ -6,6 +7,8 @@
         step: 0,
         error: ''
     });
+
+    $inspect(formState.step);
 
     const QUESTIONS = [
         {
@@ -36,26 +39,26 @@
     }
 
     // Will run onMount        
-    $effect(() => {
-        console.log("on mounted");
-        // Will run when unmounted or destroyed
-        // Before effect Re-runs
-        return () => {
-            console.log("on unmounted");
-        }
-    });
+    // $effect(() => {
+    //     console.log("on mounted");
+    //     // Will run when unmounted or destroyed
+    //     // Before effect Re-runs
+    //     return () => {
+    //         console.log("on unmounted");
+    //     }
+    // });
 
     // Svelte knows to re-run because its using compiled with the formState.step var
-    $effect(() => {
-        // This will re-run when formState.step has changed
-        console.log('formState', formState.step)
-        // DONT create state based on other state, in effect
-        // use $derived() !!!
-        return () => {
-            // before effect re-runs
-            console.log('before formState reruns', formState.step);
-        }
-    });
+    // $effect(() => {
+    //     // This will re-run when formState.step has changed
+    //     console.log('formState', formState.step)
+    //     // DONT create state based on other state, in effect
+    //     // use $derived() !!!
+    //     return () => {
+    //         // before effect re-runs
+    //         console.log('before formState reruns', formState.step);
+    //     }
+    // });
 
 </script>
 
@@ -69,7 +72,12 @@
 
     {#each QUESTIONS as question, index (question.id)}
         {#if formState.step === index}
-        {@render formStep(question)}        
+        <div 
+            in:fly={{x: 200, duration: 200, opacity: 0, delay: 200}}
+            out:fly={{x: -200, duration: 200, opacity: 0}}
+            >
+            {@render formStep(question)}        
+        </div>
         {/if}
     {/each}
 
@@ -78,7 +86,7 @@
     {/if}
 </main>
 
-{JSON.stringify(formState)}
+<!-- {JSON.stringify(formState)} -->
 
 {#snippet formStep({question, id, type} : {
     type: string; id: string; question: string;
