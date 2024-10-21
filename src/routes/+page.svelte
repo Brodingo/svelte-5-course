@@ -2,6 +2,7 @@
     import Header from './Header.svelte'
     let name = $state('Brody');
     let status: 'OPEN' | 'CLOSED' = $state('OPEN');
+    let full_name = $derived(name + " " + 'Kwiatkowski')
 
     // function toggle() {
     //     status = status == 'OPEN' ? 'CLOSED' : 'OPEN'
@@ -12,6 +13,8 @@
 </script>
 
 <Header {name} />
+
+<h3>{full_name}</h3>
 
 <input type="text" bind:value={name} />
 
