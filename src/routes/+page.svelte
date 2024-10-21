@@ -35,6 +35,28 @@
         }
     }
 
+    // Will run onMount        
+    $effect(() => {
+        console.log("on mounted");
+        // Will run when unmounted or destroyed
+        // Before effect Re-runs
+        return () => {
+            console.log("on unmounted");
+        }
+    });
+
+    // Svelte knows to re-run because its using compiled with the formState.step var
+    $effect(() => {
+        // This will re-run when formState.step has changed
+        console.log('formState', formState.step)
+        // DONT create state based on other state, in effect
+        // use $derived() !!!
+        return () => {
+            // before effect re-runs
+            console.log('before formState reruns', formState.step);
+        }
+    });
+
 </script>
 
 <Header name={formState.answers.name} />
